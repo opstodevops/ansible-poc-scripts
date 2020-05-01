@@ -1,0 +1,34 @@
+--- #Bootstrap WebServers
+- hosts: webservers
+  become: yes
+  gather_facts: yes
+  vars:
+    target_service: httpd
+  tasks:
+  - debug:
+      var: target_service
+  - name: install httpd
+    yum:
+      name: "{{ target_service }}"
+      state: latest
+    notify:
+      - restart httpd
+  - name: create index.html file
+    file:
+      name: /var/www/html/index.html
+      state: touch
+  - name: add web content
+    lineinfile:
+      line: "Hello World! {{ ansible_hostname }}"
+      path: /var/www/html/index.html
+    notify:
+      - restart httpd
+    register: task_debug #setting up debug msg
+  - debug:
+      msg: "Output of lineinfile is {{ task_debug }}"
+  handlers:
+  - name: attempt to start start httpd
+    service:
+      name: "{{ target_service }}"
+      state: restarted
+    listen: "restart httpd"

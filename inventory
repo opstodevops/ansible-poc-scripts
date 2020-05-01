@@ -1,0 +1,2 @@
+ansible01 ansible_host=172.31.36.29
+ansible02 ansible_host=172.31.36.169
