@@ -3,7 +3,6 @@ Code repository for Ansible scripts during POC phase
 
 
 ### General Commands
-
 ```
 ansible-playbook -i inventory web.yml --check
 ansible-playbook -i inventory web.yml
@@ -13,4 +12,14 @@ ansible ansible01 -m setup -a filter=*hostname*
 curl -iL 172.31.36.29
 ansible ansible01 -m setup
 ansible -i inventory -b -m yum -a "name=httpd state=absent"
+```
+
+### Docker controlnode & ansible user configuration
+```
+docker run --rm -it --volume "$(pwd)":/ansible --workdir /ansible --name controlnode centos:ansible
+cp keypair-ansible.pem /home/ansible/
+su - ansible
+exec ssh-agent bash
+ssh-add keypair
+ansible ansible01 -m ping -u ec-user
 ```
