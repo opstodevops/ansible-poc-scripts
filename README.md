@@ -14,7 +14,7 @@ ansible ansible01 -m setup
 ansible -i inventory -b -m yum -a "name=httpd state=absent"
 ```
 
-### Docker controlnode & ansible user configuration
+### Docker controlnode, ansible user configuration & running ad-hoc commands
 ```
 docker run --rm -it --volume "$(pwd)":/ansible --workdir /ansible --name controlnode centos:ansible
 cp keypair-ansible.pem /home/ansible/
@@ -22,4 +22,7 @@ su - ansible
 exec ssh-agent bash
 ssh-add keypair
 ansible ansible01 -m ping -u ec-user
+ansible ansible01 -m setup -u ec2-user
+ansible ansible01 -b -m yum -a "name=httpd state=present" -u ec2-user
+ansible ansible01 -b -m yum -a "name=httpd state=absent" -u ec2-user
 ```
