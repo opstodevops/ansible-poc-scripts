@@ -9,11 +9,9 @@ RUN yum check-update; \
     yum install -y python-boto python-boto3; \
     yum install -y awscli
 
-RUN eval `ssh-agent -s`; \
-    service sshd start; \
-    service sshd enable; \
-    useradd ansible; \
-    echo "somepassword" | passwd --stdin ansible
+RUN eval useradd ansible; \
+    echo "passwordforansibleuser" | passwd --stdin ansible; \
     usermod -aG wheel ansible
+    
     
     
