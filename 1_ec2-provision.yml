@@ -1,0 +1,49 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - keys.yml
+  tasks:
+    - name: Provision instance
+      ec2:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"  
+        ec2_region: "{{ AWS_REGION }}"
+        instance_type: t2.micro
+        keypair: ansible-keypair
+        image: ami-0323c3dd2da7fb37d # Amazon Linux
+        assign_public_ip: yes
+        vpc_subnet_id: subnet-0aa39d4ee1cbb1b42
+        group: launch-wizard-1
+        wait: true
+        count: 1
+        # exact_count: 1
+        count_tag: 
+          Name: Demo
+        instance_tags:
+          Name: Demo
+      register: ec2
+    - debug:
+        var: ec2
+
+    - name: add host to inventory # Add a host to the ansible-playbook in-memory inventory
+      add_host:
+        hostname: '{{ item.public_ip }}'
+        # groupname: demogroup
+        groups:
+        - demogroup
+        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+        ansible_ssh_private_key_file: /ansible/ansible-keypair.pem
+      loop: '{{ ec2.instances }}'
+
+- hosts: demogroup
+  gather_facts: no
+  remote_user: ec2-user
+  tasks:
+    - name: wait for SSH
+      wait_for_connection:
+        delay: 5
+        timeout: 90
+
+    - name: Check host status
+      ping:
