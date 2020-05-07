@@ -1,0 +1,25 @@
+---
+- name: Create a sandbox instance
+  hosts: localhost
+  gather_facts: False
+  vars:
+    keypair: keypairforansible
+    instance_type: t2.small
+    security_group: ssh-enabled-securityGroup
+    image: ami-0323c3dd2da7fb37d
+    region: us-east-1
+    vpc_subnet: subnet-0a85c93c8df9a4d22
+  tasks:
+    - name: Launch instance
+      ec2:
+         key_name: "{{ keypair }}"
+         group: "{{ security_group }}"
+         instance_type: "{{ instance_type }}"
+         image: "{{ image }}"
+         wait: true
+         region: "{{ region }}"
+         vpc_subnet_id: "{{ vpc_subnet }}"
+         assign_public_ip: yes
+         instance_tags:
+           name: ansible01
+      register: ec2
