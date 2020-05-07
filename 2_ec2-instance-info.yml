@@ -9,7 +9,7 @@
         aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"  
         ec2_region: "{{ AWS_REGION }}"
         filters: 
-          instance-state-name: started
+          instance-state-name: [ "running", "stopped", "shutting-down" ]
       register: ec2_info
     - debug:
         var: ec2_info
