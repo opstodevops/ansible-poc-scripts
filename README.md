@@ -16,7 +16,7 @@ ansible -i inventory -b -m yum -a "name=httpd state=absent"
 
 ### Docker controlnode, ansible user configuration & running ad-hoc commands
 ```
-docker run --rm -it --volume "$(pwd)":/ansible --workdir /ansible --name controlnode centos:ansible
+docker run --rm -it --volume "$(pwd)":/ansible --workdir /ansible --name controlnode ansible:centos
 cp keypair-ansible.pem /home/ansible/
 su - ansible
 exec ssh-agent bash
@@ -28,7 +28,8 @@ ansible ansible01 -b -m yum -a "name=httpd state=absent" -u ec2-user
 ```
 ### Docker container with AWS credentials
 ```
-docker run --rm -it --name ansiblecontrol --env "AWS_ACCESS_KEY_ID=aws_access_key" --env "AWS_SECRET_ACCESS_KEY=aws_secret_access_key" centos:ansible
+docker run --rm -it --name controlnode --env "AWS_ACCESS_KEY_ID=aws_access_key" --env "AWS_SECRET_ACCESS_KEY=aws_secret_access_key" ansible:centos
+docker run --rm -it --name controlnode --volume "$(pwd)":/ansible --workdir /ansible --env "AWS_ACCESS_KEY_ID=aws_access_key" --env "AWS_SECRET_ACCESS_KEY=aws_secret_access_key" --env "AWS_REGION=ap-southeast-2" ansible:centos
 ```
 
 ### Encrypting a file in Ansible
