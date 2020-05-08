@@ -1,21 +1,23 @@
+---
 - hosts: localhost
   gather_facts: no
-  vars_files:
-    - keys.yml
+  # vars_files:
+  #   - keys.yml
   tasks:
     - name: remove old key
       ec2_key:
-        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
-        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
-        ec2_region: "{{ AWS_REGION }}"
+        # aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        # aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        # ec2_region: "{{ AWS_REGION }}"
         name: my_keypair
         state: absent
     - name: create a new ec2 keypair
       ec2_key:
-        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
-        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
-        ec2_region: "{{ AWS_REGION }}"
+        # aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        # aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        # ec2_region: "{{ AWS_REGION }}"
         name: my_keypair
+        state: present
       register: keypair
     - debug:
         var: keypair
