@@ -13,8 +13,8 @@
         keypair: ansible-keypair
         image: ami-0323c3dd2da7fb37d # Amazon Linux
         assign_public_ip: yes
-        vpc_subnet_id: subnet-07526f8664d6b7be6
-        group: launch-wizard-1
+        vpc_subnet_id: subnet-0008007716885fa27
+        group: ssh-enabled-securityGroup
         wait: true
         count: 3
         # exact_count: 1

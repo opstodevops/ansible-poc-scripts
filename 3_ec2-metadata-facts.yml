@@ -24,8 +24,8 @@
       add_host:
         hostname: '{{ item.public_ip }}'
         groupname: demogroup
-        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
-        ansible_ssh_private_key_file: /home/ansible/keypair.pem
+        # ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+        # ansible_ssh_private_key_file: /home/ansible/keypair.pem
       loop: '{{ ec2.instances }}'
 
 
@@ -49,8 +49,8 @@
   tasks:
     - name: Check out gathered facts
       debug:
-        var: hostvars[groups['demogroup'][0]]['ansible_ec2_instance_id']
-        # var: hostvars[groups['demogroup']]['ansible_ec2_instance_id']
+        # var: hostvars[groups['demogroup'][0]]['ansible_ec2_instance_id']
+        var: hostvars[item]['ansible_ec2_instance_id']
       loop: "{{ groups.demogroup }}" # looping through instances in the demogroup in-memory variable
     
     - name: Change instances state by tag
@@ -58,7 +58,7 @@
         # aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
         # aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"  
         # ec2_region: "{{ AWS_REGION }}"
-        state: stopped
+        state: running
         instance_tags:
           Name: Demo
       register: ec2
